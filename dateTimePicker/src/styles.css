@@ -1,0 +1,125 @@
+/* 根容器：不再定義顏色，只是用變數（有 fallback） */
+.dtp-root {
+    position: relative;
+    display: inline-block;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: var(--dtp-text, #e5e7eb);
+}
+
+/* 主區塊：日期 + 按鈕 */
+.dtp-main {
+    display: inline-flex;
+    align-items: stretch;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--dtp-bg-soft, #020617);
+    border-radius: var(--dtp-radius, 8px);
+    border: 1px solid var(--dtp-border, #1f2933);
+    box-shadow: var(--dtp-shadow, 0 12px 30px rgba(0, 0, 0, 0.4));
+}
+
+/* 標籤 + 輸入欄位 */
+.dtp-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.dtp-label {
+    font-size: 12px;
+    color: var(--dtp-muted, #9ca3af);
+}
+
+.dtp-input {
+    min-width: 160px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--dtp-border, #1f2933);
+    background: var(--dtp-bg, #0b1120);
+    color: var(--dtp-text, #e5e7eb);
+    font-size: 14px;
+}
+
+.dtp-input:focus {
+    outline: none;
+    border-color: var(--dtp-primary, #0f766e);
+    box-shadow: 0 0 0 1px var(--dtp-primary, #0f766e);
+}
+
+/* 按鈕 */
+.dtp-toggle-btn,
+.dtp-close-btn {
+    border: none;
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    background: var(--dtp-primary, #0f766e);
+    color: white;
+    transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+    white-space: nowrap;
+}
+
+.dtp-toggle-btn:hover,
+.dtp-close-btn:hover {
+    background: var(--dtp-primary-hover, #115e59);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(15, 118, 110, 0.4);
+}
+
+.dtp-toggle-btn:active,
+.dtp-close-btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* 側邊時間面板 */
+.dtp-time-panel {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 220px;
+    background: var(--dtp-bg-soft, #020617);
+    border-radius: var(--dtp-radius, 8px);
+    border: 1px solid var(--dtp-border, #1f2933);
+    box-shadow: var(--dtp-shadow, 0 12px 30px rgba(0, 0, 0, 0.4));
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.25s ease-out, opacity 0.25s ease-out;
+    display: flex;
+}
+
+/* 從右邊滑出 */
+.dtp-time-panel--right {
+    right: 0;
+    transform: translateX(110%);
+}
+
+/* 從左邊滑出 */
+.dtp-time-panel--left {
+    left: 0;
+    transform: translateX(-110%);
+}
+
+/* 打開狀態 */
+.dtp-time-panel--open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.dtp-time-panel--open.dtp-time-panel--right {
+    transform: translateX(8px);
+}
+
+.dtp-time-panel--open.dtp-time-panel--left {
+    transform: translateX(-8px);
+}
+
+/* 內部內容 */
+.dtp-time-panel-inner {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
