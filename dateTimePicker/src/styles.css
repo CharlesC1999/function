@@ -1,125 +1,404 @@
-/* 根容器：不再定義顏色，只是用變數（有 fallback） */
+/* ===== 基本容器 / 變數 ===== */
+
+:root {
+  --dtp-text: #e5e7eb;
+  --dtp-text-muted: #9ca3af;
+  --dtp-bg: #0f172a;
+  --dtp-bg-soft: #1e293b;
+  --dtp-border: #334155;
+  --dtp-border-rgb: 51, 65, 85; /* RGB values for #334155 */
+  --dtp-primary: #34d399;
+  --dtp-primary-hover: #10b981;
+  --dtp-radius: 12px;
+  --dtp-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* ===== 整體佈局 ===== */
+
 .dtp-root {
-    position: relative;
-    display: inline-block;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    color: var(--dtp-text, #e5e7eb);
+  position: relative;
+  display: inline-flex; /* Use Flexbox for the root */
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  color: var(--dtp-text);
+  background: var(--dtp-bg-soft);
+  border-radius: var(--dtp-radius);
+  border: 1px solid var(--dtp-border);
+  box-shadow: var(--dtp-shadow);
+  gap: 12px; /* Increased separation */
 }
 
-/* 主區塊：日期 + 按鈕 */
-.dtp-main {
-    display: inline-flex;
-    align-items: stretch;
-    gap: 8px;
-    padding: 10px 12px;
-    background: var(--dtp-bg-soft, #020617);
-    border-radius: var(--dtp-radius, 8px);
-    border: 1px solid var(--dtp-border, #1f2933);
-    box-shadow: var(--dtp-shadow, 0 12px 30px rgba(0, 0, 0, 0.4));
+.dtp-main-content {
+  padding: 12px;
 }
 
-/* 標籤 + 輸入欄位 */
-.dtp-field {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+.dtp-display-panel {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--dtp-border);
+}
+
+.dtp-display-title {
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+  background: none;
+  border: none;
+  color: var(--dtp-text);
+  flex-grow: 1;
+  text-align: center;
+}
+.dtp-display-title:hover {
+  background-color: var(--dtp-bg);
+}
+
+.dtp-display-nav {
+  border: none;
+  background: transparent;
+  color: var(--dtp-text);
+  cursor: pointer;
+  font-size: 20px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+  flex-shrink: 0;
+}
+.dtp-display-nav:hover {
+  background-color: var(--dtp-bg);
+}
+
+.dtp-main-panel {
+  width: 266px; /* (38px * 7) */
+}
+
+.dtp-time-toggle-placeholder {
+  flex-shrink: 0;
+  border-left: 1px solid var(--dtp-border);
+  margin-left: 8px;
+  padding-left: 8px;
+}
+
+.dtp-icon-btn {
+  border: none;
+  background: transparent;
+  color: var(--dtp-text-muted);
+  cursor: pointer;
+  font-size: 18px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+.dtp-icon-btn:hover {
+  background-color: var(--dtp-bg);
+  color: var(--dtp-text);
+}
+
+/* ===== 月曆 (僅外框) ===== */
+
+.dtp-calendar {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 星期列 */
+
+.dtp-calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 6px;
+}
+
+.dtp-calendar-weekday {
+  width: 38px;
+  font-size: 12px;
+  text-align: center;
+  color: var(--dtp-text-muted);
+  font-weight: 500;
+  padding: 4px 0;
+  border: 1px solid transparent; /* Align with cells */
+}
+
+/* 日期格 */
+
+.dtp-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+}
+
+.dtp-calendar-cell {
+  position: relative;
+  width: 38px;
+  height: 36px;
+  border-radius: 4px; /* Slightly rounded corners */
+  border: 1px solid rgba(var(--dtp-border-rgb), 0.3); /* Light border */
+  font-size: 14px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--dtp-text);
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.dtp-calendar-cell:hover {
+  background-color: var(--dtp-bg);
+  border-radius: 4px; /* Consistent with other cells */
+}
+
+.dtp-calendar-cell--empty {
+  cursor: default;
+  visibility: hidden;
+  width: 38px;
+  height: 36px;
+  border: 1px solid transparent; /* To maintain alignment */
+}
+
+.dtp-calendar-cell--today::after {
+  content: "";
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--dtp-primary);
+}
+
+/* Range selection styles */
+.dtp-calendar-cell--in-range,
+.dtp-calendar-cell--in-hover-range {
+  background-color: rgba(52, 211, 153, 0.15);
+  border-radius: 0;
+  border: none; /* No individual border for in-range */
+}
+
+.dtp-calendar-cell--selected-start,
+.dtp-calendar-cell--selected-end {
+  background-color: var(--dtp-primary);
+  color: var(--dtp-bg);
+  font-weight: 600;
+  border-radius: 4px; /* Consistent with other cells */
+  border: 1px solid rgba(var(--dtp-border-rgb), 0.5); /* Darker border */
+  box-shadow: inset 0 1px 3px 0 rgba(0, 0, 0, 0.5); /* Sinking effect */
+}
+.dtp-calendar-cell--selected-start.dtp-calendar-cell--in-range,
+.dtp-calendar-cell--selected-start.dtp-calendar-cell--in-hover-range {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.dtp-calendar-cell--selected-end.dtp-calendar-cell--in-range,
+.dtp-calendar-cell--selected-end.dtp-calendar-cell--in-hover-range {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.dtp-calendar-cell--selected-start:hover,
+.dtp-calendar-cell--selected-end:hover {
+  background-color: var(--dtp-primary-hover);
+}
+
+/* ===== Year Picker ===== */
+
+.dtp-year-picker {
+  height: 258px; /* Match weekday + grid height */
+  overflow-y: auto;
+  padding: 0 4px;
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+.dtp-year-picker::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+.dtp-year-picker::-webkit-scrollbar-track {
+  background: transparent;
+}
+.dtp-year-picker::-webkit-scrollbar-thumb {
+  background: var(--dtp-border);
+  border-radius: 999px;
+}
+
+.dtp-year-item {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: var(--dtp-text);
+  font-size: 15px;
+  padding: 8px 0;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 8px;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.dtp-year-item:hover {
+  background-color: var(--dtp-bg);
+}
+
+.dtp-year-item--selected {
+  background-color: var(--dtp-primary);
+  color: var(--dtp-bg);
+  font-weight: 600;
+}
+
+.dtp-year-item--selected:hover {
+  background-color: var(--dtp-primary-hover);
+}
+
+/* ===== Time Picker Panel (Flexbox sliding) ===== */
+
+.dtp-time-panel {
+  width: 0;
+  overflow: hidden;
+  border-left: 1px solid transparent;
+  transition:
+    width 0.25s ease-out,
+    border-color 0.25s ease-out;
+  flex-shrink: 0;
+}
+
+.dtp-time-panel--open {
+  width: 250px; /* Width for three wheels */
+  border-left-color: var(--dtp-border);
+}
+
+.dtp-time-panel-inner {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+}
+
+.dtp-time-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  /* No flex-grow */
+  min-height: 0;
+}
+
+.dtp-time-wheel {
+  display: flex;
+  gap: 8px;
+  /* No flex-grow */
+  min-height: 0;
+}
+
+.dtp-wheel {
+  flex: 1;
+  background: var(--dtp-bg);
+  border-radius: 8px;
+  border: 1px solid var(--dtp-border);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 0; /* Important for flex shrink */
+}
+
+.dtp-wheel-title {
+  font-size: 11px;
+  color: var(--dtp-text-muted);
+  text-align: center;
+  margin-bottom: 4px;
 }
 
 .dtp-label {
-    font-size: 12px;
-    color: var(--dtp-muted, #9ca3af);
+  margin-block: 8px;
+  font-weight: 700;
 }
 
-.dtp-input {
-    min-width: 160px;
-    padding: 6px 8px;
-    border-radius: 6px;
-    border: 1px solid var(--dtp-border, #1f2933);
-    background: var(--dtp-bg, #0b1120);
-    color: var(--dtp-text, #e5e7eb);
-    font-size: 14px;
+.dtp-wheel-list {
+  max-height: 176px; /* CRITICAL FIX: Constrain height and enable scrolling */
+  overflow-y: auto;
+  padding: 0 2px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+.dtp-wheel-list::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+.dtp-wheel-list::-webkit-scrollbar-thumb {
+  background: var(--dtp-border);
+  border-radius: 999px;
 }
 
-.dtp-input:focus {
-    outline: none;
-    border-color: var(--dtp-primary, #0f766e);
-    box-shadow: 0 0 0 1px var(--dtp-primary, #0f766e);
+.dtp-wheel-item {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: var(--dtp-text);
+  font-size: 14px;
+  padding: 4px 0;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 6px;
 }
 
-/* 按鈕 */
-.dtp-toggle-btn,
+.dtp-wheel-item:hover {
+  background-color: var(--dtp-bg);
+}
+
+.dtp-wheel-item--selected {
+  background-color: var(--dtp-primary);
+  color: var(--dtp-bg);
+  font-weight: 600;
+}
+.dtp-wheel-item--selected:hover {
+  background-color: var(--dtp-primary-hover);
+}
+
+/* ===== Footer & Close Button ===== */
+
+.dtp-footer {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--dtp-border);
+  display: flex;
+  justify-content: flex-end;
+}
+
 .dtp-close-btn {
-    border: none;
-    border-radius: 999px;
-    padding: 6px 12px;
-    font-size: 14px;
-    cursor: pointer;
-    background: var(--dtp-primary, #0f766e);
-    color: white;
-    transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
-    white-space: nowrap;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  background: var(--dtp-primary);
+  color: var(--dtp-bg);
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
 }
 
-.dtp-toggle-btn:hover,
 .dtp-close-btn:hover {
-    background: var(--dtp-primary-hover, #115e59);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(15, 118, 110, 0.4);
-}
-
-.dtp-toggle-btn:active,
-.dtp-close-btn:active {
-    transform: translateY(0);
-    box-shadow: none;
-}
-
-/* 側邊時間面板 */
-.dtp-time-panel {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 220px;
-    background: var(--dtp-bg-soft, #020617);
-    border-radius: var(--dtp-radius, 8px);
-    border: 1px solid var(--dtp-border, #1f2933);
-    box-shadow: var(--dtp-shadow, 0 12px 30px rgba(0, 0, 0, 0.4));
-    opacity: 0;
-    pointer-events: none;
-    transition: transform 0.25s ease-out, opacity 0.25s ease-out;
-    display: flex;
-}
-
-/* 從右邊滑出 */
-.dtp-time-panel--right {
-    right: 0;
-    transform: translateX(110%);
-}
-
-/* 從左邊滑出 */
-.dtp-time-panel--left {
-    left: 0;
-    transform: translateX(-110%);
-}
-
-/* 打開狀態 */
-.dtp-time-panel--open {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-.dtp-time-panel--open.dtp-time-panel--right {
-    transform: translateX(8px);
-}
-
-.dtp-time-panel--open.dtp-time-panel--left {
-    transform: translateX(-8px);
-}
-
-/* 內部內容 */
-.dtp-time-panel-inner {
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 100%;
+  background-color: var(--dtp-primary-hover);
 }
