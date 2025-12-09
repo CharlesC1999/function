@@ -60,7 +60,6 @@ export function YearPicker({ viewDate, onSelectYear }) {
 export default function DatePicker({ value, onChange, viewDate, className = "" }) {
     const startDate = useMemo(() => parseDateString(value?.start), [value]);
     const endDate = useMemo(() => parseDateString(value?.end), [value]);
-    const [hoveredDate, setHoveredDate] = useState(null);
 
     const year = viewDate.getUTCFullYear();
     const month = viewDate.getUTCMonth(); // 0-11
@@ -82,31 +81,13 @@ export default function DatePicker({ value, onChange, viewDate, className = "" }
 
     const handleSelectDay = (date) => {
         if (!date) return;
-        if (!startDate || (startDate && endDate)) {
-            onChange?.({ start: formatDate(date), end: null });
-        } else if (startDate && !endDate) {
-            if (date < startDate) {
-                onChange?.({ start: formatDate(date), end: null });
-            } else {
-                onChange?.({ start: formatDate(startDate), end: formatDate(date) });
-            }
-        }
-    };
-
-    const handleMouseEnter = (date) => {
-        if (startDate && !endDate) {
-            setHoveredDate(date);
-        }
-    };
-
-    const handleMouseLeave = () => {
-        setHoveredDate(null);
+        onChange?.({ start: formatDate(date), end: null });
     };
 
     const today = new Date();
 
     return (
-        <div className={`dtp-calendar ${className}`} onMouseLeave={handleMouseLeave}>
+        <div className={`dtp-calendar ${className}`}>
             <div className="dtp-calendar-weekdays">
                 {weekdayLabels.map((w) => (
                     <div key={w} className="dtp-calendar-weekday">
@@ -130,15 +111,6 @@ export default function DatePicker({ value, onChange, viewDate, className = "" }
                         date.getUTCMonth() === today.getMonth() &&
                         date.getUTCDate() === today.getDate();
 
-                    let isInHoverRange = false;
-                    if (startDate && !endDate && hoveredDate) {
-                        if (hoveredDate > startDate) {
-                            isInHoverRange = date > startDate && date <= hoveredDate;
-                        } else if (hoveredDate < startDate) {
-                            isInHoverRange = date >= hoveredDate && date < startDate;
-                        }
-                    }
-
                     return (
                         <button
                             key={idx}
@@ -149,12 +121,10 @@ export default function DatePicker({ value, onChange, viewDate, className = "" }
                                 isSelectedStart ? "dtp-calendar-cell--selected-start" : "",
                                 isSelectedEnd ? "dtp-calendar-cell--selected-end" : "",
                                 isInRange ? "dtp-calendar-cell--in-range" : "",
-                                isInHoverRange ? "dtp-calendar-cell--in-hover-range" : "",
                             ]
                                 .filter(Boolean)
                                 .join(" ")}
                             onClick={() => handleSelectDay(date)}
-                            onMouseEnter={() => handleMouseEnter(date)}
                         >
                             {day}
                         </button>

@@ -1,10 +1,15 @@
+.dtp-root,
+.dtp-root * {
+  box-sizing: border-box;
+}
+
 /* ===== 基本容器 / 變數 ===== */
 
 :root {
   --dtp-text: #e5e7eb;
   --dtp-text-muted: #9ca3af;
-  --dtp-bg: #0f172a;
-  --dtp-bg-soft: #1e293b;
+  --dtp-bg: transparent;
+  --dtp-bg-soft: transparent;
   --dtp-border: #334155;
   --dtp-border-rgb: 51, 65, 85; /* RGB values for #334155 */
   --dtp-primary: #34d399;
@@ -26,11 +31,8 @@
     "Segoe UI",
     sans-serif;
   color: var(--dtp-text);
-  background: var(--dtp-bg-soft);
   border-radius: var(--dtp-radius);
   border: 1px solid var(--dtp-border);
-  box-shadow: var(--dtp-shadow);
-  gap: 12px; /* Increased separation */
 }
 
 .dtp-main-content {
@@ -67,9 +69,9 @@
   background: transparent;
   color: var(--dtp-text);
   cursor: pointer;
-  font-size: 20px;
-  width: 32px;
-  height: 32px;
+  font-size: 18px; /* Slightly reduced */
+  width: 28px; /* Slightly reduced */
+  height: 28px; /* Slightly reduced */
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -82,7 +84,7 @@
 }
 
 .dtp-main-panel {
-  width: 266px; /* (38px * 7) */
+  width: 244px; /* (34px * 7) + (6 * 1px) - Adjusted for actual grid width */
 }
 
 .dtp-time-toggle-placeholder {
@@ -97,9 +99,9 @@
   background: transparent;
   color: var(--dtp-text-muted);
   cursor: pointer;
-  font-size: 18px;
-  width: 32px;
-  height: 32px;
+  font-size: 16px; /* Slightly reduced */
+  width: 28px; /* Slightly reduced */
+  height: 28px; /* Slightly reduced */
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -129,7 +131,7 @@
 }
 
 .dtp-calendar-weekday {
-  width: 38px;
+  width: 34px; /* Adjusted */
   font-size: 12px;
   text-align: center;
   color: var(--dtp-text-muted);
@@ -148,8 +150,8 @@
 
 .dtp-calendar-cell {
   position: relative;
-  width: 38px;
-  height: 36px;
+  width: 34px; /* Adjusted */
+  height: 32px; /* Adjusted */
   border-radius: 4px; /* Slightly rounded corners */
   border: 1px solid rgba(var(--dtp-border-rgb), 0.3); /* Light border */
   font-size: 14px;
@@ -170,8 +172,8 @@
 .dtp-calendar-cell--empty {
   cursor: default;
   visibility: hidden;
-  width: 38px;
-  height: 36px;
+  width: 34px; /* Adjusted */
+  height: 32px; /* Adjusted */
   border: 1px solid transparent; /* To maintain alignment */
 }
 
@@ -284,7 +286,7 @@
 }
 
 .dtp-time-panel--open {
-  width: 250px; /* Width for three wheels */
+  width: 210px; /* Adjusted to be slightly narrower */
   border-left-color: var(--dtp-border);
 }
 
@@ -336,7 +338,7 @@
 }
 
 .dtp-wheel-list {
-  max-height: 176px; /* CRITICAL FIX: Constrain height and enable scrolling */
+  max-height: 280px;
   overflow-y: auto;
   padding: 0 2px;
   scrollbar-width: none; /* Firefox */
