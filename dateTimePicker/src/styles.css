@@ -332,9 +332,11 @@
   margin-bottom: 4px;
 }
 
-.dtp-label {
-  margin-block: 8px;
-  font-weight: 700;
+.dtp-label-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-block: 8px; /* Maintain vertical spacing for the label */
 }
 
 .dtp-wheel-list {
@@ -378,14 +380,70 @@
   background-color: var(--dtp-primary-hover);
 }
 
-/* ===== Footer & Close Button ===== */
+.dtp-time-reset-icon-btn {
+  border: none;
+  background: transparent;
+  color: var(--dtp-text-muted);
+  cursor: pointer;
+  font-size: 14px; /* Slightly smaller icon */
+  width: 24px; /* Smaller size */
+  height: 24px; /* Smaller size */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+  flex-shrink: 0;
+}
+.dtp-time-reset-icon-btn:hover {
+  background-color: var(--dtp-bg);
+  color: var(--dtp-text);
+}
+
+/* ===== Footer & Controls ===== */
 
 .dtp-footer {
   margin-top: 12px;
   padding-top: 12px;
   border-top: 1px solid var(--dtp-border);
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+}
+
+.dtp-lang-switcher {
+  display: flex;
+  gap: 4px;
+}
+
+.dtp-lang-switcher-btn {
+  border: 1px solid var(--dtp-border);
+  background-color: transparent;
+  color: var(--dtp-text-muted);
+  border-radius: 6px;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.dtp-lang-switcher-btn:hover {
+  border-color: var(--dtp-text-muted);
+  color: var(--dtp-text);
+}
+
+.dtp-lang-switcher-btn--current {
+  border-color: var(--dtp-primary);
+  color: var(--dtp-primary);
+  font-weight: 700;
 }
 
 .dtp-close-btn {
@@ -404,3 +462,4 @@
 .dtp-close-btn:hover {
   background-color: var(--dtp-primary-hover);
 }
+

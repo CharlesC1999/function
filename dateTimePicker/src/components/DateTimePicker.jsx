@@ -35,14 +35,10 @@ function buildThemeStyle(theme = {}) {
     };
 }
 
-const monthNames = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-];
-
-export default function DateTimePicker({ value, onChange, className = "", theme, side = "right" }) {
+export default function DateTimePicker({ value, onChange, className = "", theme, lang = "en-US", onLangChange, side = "right" }) {
     const [{ date, time }, setState] = useState({ date: { start: null, end: null }, time: "" });
     const [isTimeOpen, setIsTimeOpen] = useState(false);
+    const [isLangMenuExpanded, setIsLangMenuExpanded] = useState(false);
 
     const startDate = useMemo(() => (date.start ? new Date(date.start) : null), [date.start]);
     const endDate = useMemo(() => (date.end ? new Date(date.end) : null), [date.end]);
@@ -76,6 +72,11 @@ export default function DateTimePicker({ value, onChange, className = "", theme,
         setIsPickingYear(false);
     };
 
+    const handleLangSelect = (newLang) => {
+        onLangChange?.(newLang);
+        setIsLangMenuExpanded(false);
+    };
+
     const gotoPrevMonth = () => {
         setViewDate((prev) => new Date(Date.UTC(prev.getUTCFullYear(), prev.getUTCMonth() - 1, 1)));
     };
@@ -83,10 +84,17 @@ export default function DateTimePicker({ value, onChange, className = "", theme,
     const gotoNextMonth = () => {
         setViewDate((prev) => new Date(Date.UTC(prev.getUTCFullYear(), prev.getUTCMonth() + 1, 1)));
     };
+    
+    const toggleTimePanel = () => {
+        setIsTimeOpen(p => !p);
+    };
 
     const year = viewDate.getUTCFullYear();
-    const month = viewDate.getUTCMonth();
     const themeStyle = buildThemeStyle(theme);
+    
+    const langShortNames = { "en-US": "En", "zh-TW": "中", "ja-JP": "日" };
+    const langOrder = ["zh-TW", "ja-JP", "en-US"];
+
 
     return (
         <div className={`dtp-root ${className}`} style={themeStyle}>
@@ -96,13 +104,13 @@ export default function DateTimePicker({ value, onChange, className = "", theme,
                         ‹
                     </button>
                     <button type="button" className="dtp-display-title" onClick={() => setIsPickingYear((p) => !p)}>
-                        {monthNames[month]} {year}
+                        {viewDate.toLocaleString(lang, { month: 'long', timeZone: 'UTC' })} {year}
                     </button>
                     <button type="button" className="dtp-display-nav" onClick={gotoNextMonth}>
                         ›
                     </button>
                     <div className="dtp-time-toggle-placeholder">
-                        <button type="button" className="dtp-icon-btn" onClick={() => setIsTimeOpen(p => !p)}>
+                        <button type="button" className="dtp-icon-btn" onClick={toggleTimePanel}>
                             {isTimeOpen ? '‹‹' : '››'}
                         </button>
                     </div>
@@ -112,11 +120,29 @@ export default function DateTimePicker({ value, onChange, className = "", theme,
                     {isPickingYear ? (
                         <YearPicker viewDate={viewDate} onSelectYear={handleSelectYear} />
                     ) : (
-                        <DatePicker value={date} onChange={handleDateChange} viewDate={viewDate} />
+                        <DatePicker value={date} onChange={handleDateChange} viewDate={viewDate} lang={lang} />
                     )}
                 </div>
 
                 <div className="dtp-footer">
+                    <div className="dtp-lang-switcher">
+                        {langOrder.map(langCode => {
+                             const isCurrent = lang === langCode;
+                             if (!isCurrent && !isLangMenuExpanded) return null;
+
+                             return (
+                                <button
+                                    key={langCode}
+                                    type="button"
+                                    className={`dtp-lang-switcher-btn ${isCurrent ? 'dtp-lang-switcher-btn--current' : ''}`}
+                                    onClick={() => isCurrent ? setIsLangMenuExpanded(p => !p) : handleLangSelect(langCode)}
+                                >
+                                    {langShortNames[langCode]}
+                                </button>
+                             );
+                        })}
+                    </div>
+                    <div style={{ flex: 1 }}></div> {/* This spacer pushes the following items to the right */}
                     <button type="button" className="dtp-close-btn" onClick={() => setIsTimeOpen(false)}>
                         Done
                     </button>

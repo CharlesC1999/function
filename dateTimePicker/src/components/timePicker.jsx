@@ -63,9 +63,18 @@ export default function TimePicker({
     updateTime(hour, minute, s);
   };
 
+  const handleReset = () => {
+    onChange?.('');
+  };
+
   return (
     <div className={`dtp-time-picker ${className}`}>
-      {label && <div className="dtp-label">{label}</div>}
+      <div className="dtp-label-container">
+        {label && <div className="dtp-label">{label}</div>}
+        <button type="button" className="dtp-time-reset-icon-btn" onClick={handleReset} title="Reset Time">
+          ↻
+        </button>
+      </div>
 
       <div className="dtp-time-wheel">
         <div className="dtp-wheel">

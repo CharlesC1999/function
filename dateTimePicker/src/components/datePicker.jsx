@@ -15,8 +15,6 @@ function parseDateString(str) {
     return new Date(Date.UTC(y, m - 1, d));
 }
 
-const weekdayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
 export function YearPicker({ viewDate, onSelectYear }) {
     const listRef = useRef(null);
     const selectedYearRef = useRef(null);
@@ -57,12 +55,25 @@ export function YearPicker({ viewDate, onSelectYear }) {
     );
 }
 
-export default function DatePicker({ value, onChange, viewDate, className = "" }) {
+export default function DatePicker({ value, onChange, viewDate, className = "", lang = "en-US" }) {
     const startDate = useMemo(() => parseDateString(value?.start), [value]);
     const endDate = useMemo(() => parseDateString(value?.end), [value]);
 
     const year = viewDate.getUTCFullYear();
     const month = viewDate.getUTCMonth(); // 0-11
+
+    const weekdayLabels = useMemo(() => {
+        if (lang === 'zh-TW') {
+            return ['日', '一', '二', '三', '四', '五', '六'];
+        }
+        const labels = [];
+        // Get weekdays starting from Sunday
+        for (let i = 0; i < 7; i++) {
+            const day = new Date(Date.UTC(2023, 0, 1 + i)); // A known Sunday
+            labels.push(day.toLocaleString(lang, { weekday: 'short', timeZone: 'UTC' }));
+        }
+        return labels;
+    }, [lang]);
 
     const firstDayOfMonth = new Date(Date.UTC(year, month, 1));
     const startWeekday = firstDayOfMonth.getUTCDay();
@@ -89,8 +100,8 @@ export default function DatePicker({ value, onChange, viewDate, className = "" }
     return (
         <div className={`dtp-calendar ${className}`}>
             <div className="dtp-calendar-weekdays">
-                {weekdayLabels.map((w) => (
-                    <div key={w} className="dtp-calendar-weekday">
+                {weekdayLabels.map((w, i) => (
+                    <div key={i} className="dtp-calendar-weekday">
                         {w}
                     </div>
                 ))}
