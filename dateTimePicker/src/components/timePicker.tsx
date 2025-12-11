@@ -1,8 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 
-function parseTimeString(str) {
+function parseTimeString(
+  str: string | null | undefined
+): { hour: number; minute: number; second: number } {
   if (!str) return { hour: 0, minute: 0, second: 0 };
-  const [h, m, s] = str.split(":").map((v) => parseInt(v ?? "0", 10));
+  const [h, m, s] = str.split(":").map((v: string) => parseInt(v ?? "0", 10));
   return {
     hour: Number.isNaN(h) ? 0 : h,
     minute: Number.isNaN(m) ? 0 : m,
@@ -10,32 +12,39 @@ function parseTimeString(str) {
   };
 }
 
-function formatTime(hour, minute, second) {
+function formatTime(hour: number, minute: number, second: number): string {
   const h = String(hour).padStart(2, "0");
   const m = String(minute).padStart(2, "0");
   const s = String(second).padStart(2, "0");
   return `${h}:${m}:${s}`;
 }
 
-const hours = Array.from({ length: 24 }, (_, i) => i);
-const minutes = Array.from({ length: 60 }, (_, i) => i);
-const seconds = Array.from({ length: 60 }, (_, i) => i);
+const hours: number[] = Array.from({ length: 24 }, (_, i) => i);
+const minutes: number[] = Array.from({ length: 60 }, (_, i) => i);
+const seconds: number[] = Array.from({ length: 60 }, (_, i) => i);
+
+interface TimePickerProps {
+  value?: string | null;
+  onChange?: (time: string) => void;
+  label?: string;
+  className?: string;
+}
 
 export default function TimePicker({
   value,
   onChange,
   label = "Time",
   className = "",
-}) {
+}: TimePickerProps) {
   const {
     hour: initialHour,
     minute: initialMinute,
     second: initialSecond,
   } = useMemo(() => parseTimeString(value), [value]);
 
-  const [hour, setHour] = useState(initialHour);
-  const [minute, setMinute] = useState(initialMinute);
-  const [second, setSecond] = useState(initialSecond);
+  const [hour, setHour] = useState<number>(initialHour);
+  const [minute, setMinute] = useState<number>(initialMinute);
+  const [second, setSecond] = useState<number>(initialSecond);
 
   useEffect(() => {
     setHour(initialHour);
@@ -43,28 +52,32 @@ export default function TimePicker({
     setSecond(initialSecond);
   }, [initialHour, initialMinute, initialSecond]);
 
-  const updateTime = (nextHour, nextMinute, nextSecond) => {
+  const updateTime = (
+    nextHour: number,
+    nextMinute: number,
+    nextSecond: number
+  ) => {
     const formatted = formatTime(nextHour, nextMinute, nextSecond);
-    onChange && onChange(formatted);
+    onChange?.(formatted);
   };
 
-  const handleSelectHour = (h) => {
+  const handleSelectHour = (h: number) => {
     setHour(h);
     updateTime(h, minute, second);
   };
 
-  const handleSelectMinute = (m) => {
+  const handleSelectMinute = (m: number) => {
     setMinute(m);
     updateTime(hour, m, second);
   };
 
-  const handleSelectSecond = (s) => {
+  const handleSelectSecond = (s: number) => {
     setSecond(s);
     updateTime(hour, minute, s);
   };
 
   const handleReset = () => {
-    onChange?.('');
+    onChange?.("");
   };
 
   return (

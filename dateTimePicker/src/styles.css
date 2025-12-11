@@ -446,7 +446,7 @@
   font-weight: 700;
 }
 
-.dtp-close-btn {
+.dtp-done-btn {
   border: none;
   border-radius: 8px;
   padding: 8px 14px;
@@ -459,7 +459,7 @@
   white-space: nowrap;
 }
 
-.dtp-close-btn:hover {
+.dtp-done-btn:hover {
   background-color: var(--dtp-primary-hover);
 }
 

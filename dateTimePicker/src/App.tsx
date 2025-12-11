@@ -2,7 +2,7 @@ import { useState } from "react";
 import { DateTimePicker } from "./components";
 
 function App() {
-  const [value, setValue] = useState("2025-12-10T10:30:00");
+  const [value, setValue] = useState("2025-12-10");
   const [lang, setLang] = useState('zh-TW');
 
   return (
